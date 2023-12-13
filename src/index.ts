@@ -6,6 +6,7 @@ import cors from 'cors';
 import { AppConfig } from './app.config';
 import { ELogCategory, log } from './middleware';
 import { Resend } from 'resend';
+import WelcomeUser from './emails/welcome-user';
 
 /**
  * Check if all required environment-variables are set
@@ -39,7 +40,9 @@ app.get('/', async (request, response) => {
       to: 'thorben.klein1801@gmail.com',
       from: 'no-reply@mail.budget-buddy.de',
       subject: 'Welcome to Budget-Buddy',
-      html: '<strong>Welcome aboard, John Doe!</strong>',
+      // html: '<strong>Welcome aboard, John Doe!</strong>',
+      // @ts-ignore
+      react: <WelcomeUser name="Thorben" company="(DEV) Budget-Buddy" />,
     })
   );
   response.status(200).json({});
