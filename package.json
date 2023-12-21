@@ -1,0 +1,39 @@
+{
+  "name": "mail-service",
+  "version": "0.1.0",
+  "main": "build/src/server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "npm run build && node build/src/server.js",
+    "dev": "nodemon src/server.ts",
+    "lint": "eslint --fix --ext .ts ./src",
+    "build": "rimraf build && npm run lint && tsc --pretty"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.12",
+    "@react-email/render": "0.0.7",
+    "body-parser": "^1.20.2",
+    "chalk": "^4.1.2",
+    "dotenv": "^16.3.1",
+    "express": "4.18.2",
+    "react-email": "^1.10.0",
+    "resend": "1.0.0",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "@typescript-eslint/eslint-plugin": "6.4.0",
+    "@typescript-eslint/parser": "6.4.0",
+    "cors": "^2.8.5",
+    "eslint": "8.47.0",
+    "nodemon": "^3.0.2"
+  }
+}
