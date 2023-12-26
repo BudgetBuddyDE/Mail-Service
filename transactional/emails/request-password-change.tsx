@@ -13,56 +13,57 @@ import {
   Text,
   Link,
 } from '@react-email/components';
+import { SERVICE_URL, CONFIG } from './cfg';
 import { AppConfig } from '../../src/config';
-import { CONFIG, SERVICE_URL } from './cfg';
 
-export const ZWelcomeMailProps = z.object({
-  uuid: z.string(),
+export const ZRequestPasswordChangeProps = z.object({
   name: z.string().default('John Doe'),
-  email: z.string().email(),
-  company: z.string().optional().default('Budget Buddy'),
+  company: z.string().default('Budget Buddy'),
+  otp: z.string().uuid().default('no-uuid-provided'),
 });
-export type TWelcomeMailProps = z.infer<typeof ZWelcomeMailProps>;
+export type TRequestPasswordChangeProps = z.infer<typeof ZRequestPasswordChangeProps>;
 
-export const WelcomeMail: React.FC<TWelcomeMailProps> = ({
-  uuid = 'no-uuid-provided',
+export const RequestPasswordChange: React.FC<TRequestPasswordChangeProps> = ({
   name = 'John Doe',
-  email = 'john.doe@budget-buddy.de',
   company = 'Budget Buddy',
+  otp = 'no-otp-provided',
 }) => {
   const redirectUrl = () => {
-    const query = new URLSearchParams({
-      uuid,
-      mailAddress: email,
-      returnTo:
-        (AppConfig.environment === 'PROD' ? CONFIG.webapp : 'http://localhost:3000') +
-        '/verify-email',
-    });
-    return `${CONFIG.authMailVerifyEndpoint}?${query.toString()}`;
+    const query = new URLSearchParams({ otp });
+    return `${
+      (AppConfig.environment === 'PROD' ? CONFIG.webapp : 'http://localhost:3000') +
+      '/reset-password'
+    }?${query.toString()}`;
   };
 
   return (
     <Html>
       <Head />
-      <Preview>Verify your email address</Preview>
+      <Preview>Requested password change</Preview>
       <Body style={main}>
         <Container style={container}>
           <Img src={`${SERVICE_URL}/static/mails/logo.png`} alt="Logo" style={logo} />
 
           <Text style={paragraph}>Hi {name},</Text>
           <Text style={paragraph}>
-            We're thrilled to welcome you to {company}! Before getting started on your journey
-            towards smarter budgeting, we need to confirm your email address.
+            Someone recently requested a password change for your Dropbox account. If this was you,
+            you can set a new password here:
           </Text>
+
           <Section style={btnContainer}>
             <Button style={button} href={redirectUrl()}>
-              Initiate Your Journey
+              Reset password
             </Button>
           </Section>
 
           <Text style={paragraph}>
-            If you have any questions, please feel free to contact us. We're here to help!
+            If you don't want to change your password or didn't request this, just ignore and delete
+            this message.
           </Text>
+          <Text style={paragraph}>
+            To keep your account secure, please don't forward this email to anyone.
+          </Text>
+
           <Text style={paragraph}>
             Best Wishes,
             <br />
@@ -83,7 +84,7 @@ export const WelcomeMail: React.FC<TWelcomeMailProps> = ({
   );
 };
 
-export default WelcomeMail;
+export default RequestPasswordChange;
 
 const main = {
   backgroundColor: '#ffffff',
