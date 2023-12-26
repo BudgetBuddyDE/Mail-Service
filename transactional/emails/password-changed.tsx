@@ -1,68 +1,47 @@
 import * as React from 'react';
 import { z } from 'zod';
-import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Hr,
-  Html,
-  Img,
-  Preview,
-  Section,
-  Text,
-  Link,
-} from '@react-email/components';
-import { AppConfig } from '../../src/config';
+import { Body, Container, Head, Hr, Html, Img, Preview, Text, Link } from '@react-email/components';
 import { CONFIG, SERVICE_URL } from './cfg';
+import { AppConfig } from '../../src/config';
 
-export const ZWelcomeMailProps = z.object({
-  uuid: z.string(),
+export const ZPasswordChangedProps = z.object({
   name: z.string().default('John Doe'),
-  email: z.string().email(),
-  company: z.string().optional().default('Budget Buddy'),
+  company: z.string().default('Budget Buddy'),
 });
-export type TWelcomeMailProps = z.infer<typeof ZWelcomeMailProps>;
+export type TPasswordChangedProps = z.infer<typeof ZPasswordChangedProps>;
 
-export const WelcomeMail: React.FC<TWelcomeMailProps> = ({
-  uuid = 'no-uuid-provided',
+export const PasswordChanged: React.FC<TPasswordChangedProps> = ({
   name = 'John Doe',
-  email = 'john.doe@budget-buddy.de',
   company = 'Budget Buddy',
 }) => {
-  const redirectUrl = () => {
-    const query = new URLSearchParams({
-      uuid,
-      mailAddress: email,
-      returnTo:
-        (AppConfig.environment === 'PROD' ? CONFIG.webapp : 'http://localhost:3000') +
-        '/verify-email',
-    });
-    return `${CONFIG.authMailVerifyEndpoint}?${query.toString()}`;
-  };
-
   return (
     <Html>
       <Head />
-      <Preview>Verify your email address</Preview>
+      <Preview>Your password changed</Preview>
       <Body style={main}>
         <Container style={container}>
           <Img src={`${SERVICE_URL}/static/mails/logo.png`} alt="Logo" style={logo} />
 
           <Text style={paragraph}>Hi {name},</Text>
           <Text style={paragraph}>
-            We're thrilled to welcome you to {company}! Before getting started on your journey
-            towards smarter budgeting, we need to confirm your email address.
+            You're password was changed recently. If this was you, then no further action is
+            required. However if you did NOT perform this password change, please{' '}
+            <Link
+              href={
+                (AppConfig.environment === 'PROD' ? CONFIG.webapp : 'http://localhost:3000') +
+                '/request-password-reset'
+              }
+            >
+              reset your account password
+            </Link>{' '}
+            immediately.
           </Text>
-          <Section style={btnContainer}>
-            <Button style={button} href={redirectUrl()}>
-              Initiate Your Journey
-            </Button>
-          </Section>
 
           <Text style={paragraph}>
-            If you have any questions, please feel free to contact us. We're here to help!
+            Remember to use a password that is both strong and unique to your account.
           </Text>
+          <Text style={paragraph}>Still have questions? Don't mind to contact us</Text>
+
           <Text style={paragraph}>
             Best Wishes,
             <br />
@@ -83,7 +62,7 @@ export const WelcomeMail: React.FC<TWelcomeMailProps> = ({
   );
 };
 
-export default WelcomeMail;
+export default PasswordChanged;
 
 const main = {
   backgroundColor: '#ffffff',
