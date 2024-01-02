@@ -9,7 +9,7 @@ import { CreateEmailOptions } from 'resend/build/src/emails/interfaces';
 import { WelcomeMail } from '../transactional/emails/welcome';
 import { resend } from './lib/resend';
 import { ELogCategory, log, logMiddleware } from './middleware';
-import { AppConfig } from './config';
+import { AppConfig, determineEnvironment } from './config';
 import { UserService } from './services';
 import {
   EMailTemplates,
@@ -45,7 +45,12 @@ export const app = express();
 app.use(cors(AppConfig.cors));
 app.use(logMiddleware);
 app.use(bodyParser.json());
-app.use('/static', express.static(path.join(__dirname, '../public')));
+app.use(
+  '/static',
+  express.static(
+    path.join(__dirname, '../', determineEnvironment() === 'PROD' ? '../public/' : 'public/')
+  )
+);
 
 export const ZBasePayload = z.object({
   to: z.string().email(),
