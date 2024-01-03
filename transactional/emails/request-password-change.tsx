@@ -46,7 +46,7 @@ export const RequestPasswordChange: React.FC<TRequestPasswordChangeProps> = ({
 
           <Text style={paragraph}>Hi {name},</Text>
           <Text style={paragraph}>
-            Someone recently requested a password change for your Dropbox account. If this was you,
+            Someone recently requested a password change for your {company} account. If this was you,
             you can set a new password here:
           </Text>
 
