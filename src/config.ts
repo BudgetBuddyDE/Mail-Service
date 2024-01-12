@@ -5,10 +5,10 @@ export type TAppConfig = {
   environmentVariables: string[];
   production: boolean;
   /*
-   * `8090` = PROD
+   * `8080` = PROD
    * `8090` = DEV
    */
-  port: 8090 | 8090;
+  port: 8080 | 8090 | number;
   cors: CorsOptions;
 };
 
@@ -22,7 +22,12 @@ export const AppConfig: TAppConfig = {
     'SERVICE_USER_PASSWORD',
   ],
   production: determineEnvironment() === 'PROD',
-  port: determineEnvironment() === 'PROD' ? 8090 : 8090,
+  port:
+    process.env.PORT != undefined
+      ? Number(process.env.PORT)
+      : determineEnvironment() === 'PROD'
+      ? 8080
+      : 8090,
   cors: {
     origin: determineEnvironment() === 'PROD' ? [/\.budget-buddy\.de$/] : [/\.localhost\$/],
     credentials: false,
