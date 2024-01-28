@@ -9,7 +9,8 @@
     "start": "npm run build && node build/src/server.js",
     "dev": "nodemon src/server.ts",
     "lint": "eslint --fix --ext .ts ./src",
-    "build": "rimraf build && npm run lint && tsc --pretty"
+    "build": "rimraf build && npm run lint && tsc --pretty",
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "@react-email/components": "^0.0.12",
