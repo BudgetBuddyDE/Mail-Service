@@ -78,7 +78,7 @@ app.post('/send', async (req: Request, res: Response) => {
     const parsedBody = ZCombinedPayload.safeParse(reqBody);
     if (!parsedBody.success) {
       log('ERROR', ELogCategory.MAIL, parsedBody.error.message);
-      throw new Error("Body doesn't match schema");
+      throw new Error('Body doesn\'t match schema');
     }
     const selectedTemplateType: EMailTemplates = parsedBody.data.mail;
     const selectedTemplate = await getMailTemplate(parsedBody.data);

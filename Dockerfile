@@ -6,7 +6,6 @@ WORKDIR /usr/src/mail-service/
 
 COPY package*.json ./
 
-
 RUN npm install
 
 COPY . .
