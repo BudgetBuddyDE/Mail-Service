@@ -52,6 +52,10 @@ app.use(
   )
 );
 
+app.get('/status', (req, res) => {
+  return res.status(200).json({ status: 'OK' });
+});
+
 export const ZBasePayload = z.object({
   to: z.string().email(),
   mail: z.nativeEnum(EMailTemplates),
