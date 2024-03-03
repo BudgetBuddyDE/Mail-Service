@@ -48,8 +48,9 @@ export function logMiddleware(req: Request, res: Response, next: NextFunction) {
       headers: req.headers,
     };
 
-    logger.log('Process request with status code \'{statusCode}\'', {
-      statusCode,
+    // eslint-disable-next-line
+    logger.info("Process request with status code '{statusCode}'", {
+      statusCode: statusCode,
       category: ELogCategory.REQUEST,
       ...message,
     });
