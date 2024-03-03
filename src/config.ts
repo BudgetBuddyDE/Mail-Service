@@ -10,6 +10,10 @@ export type TAppConfig = {
    */
   port: 8080 | 8090 | number;
   cors: CorsOptions;
+  log: {
+    apiUrl: string;
+    apiKey: string;
+  };
 };
 
 export const AppConfig: TAppConfig = {
@@ -20,6 +24,8 @@ export const AppConfig: TAppConfig = {
     'BACKEND_HOST',
     'SERVICE_USER_UUID',
     'SERVICE_USER_PASSWORD',
+    'LOG_API_URL',
+    'LOG_API_KEY',
   ],
   production: determineEnvironment() === 'PROD',
   port:
@@ -31,6 +37,10 @@ export const AppConfig: TAppConfig = {
   cors: {
     origin: determineEnvironment() === 'PROD' ? [/\.budget-buddy\.de$/] : [/\.localhost\$/],
     credentials: false,
+  },
+  log: {
+    apiUrl: process.env.LOG_API_URL as string,
+    apiKey: process.env.LOG_API_KEY as string,
   },
 };
 
