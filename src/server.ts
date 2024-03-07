@@ -8,7 +8,7 @@ import bodyParser from 'body-parser';
 import { CreateEmailOptions } from 'resend/build/src/emails/interfaces';
 import { WelcomeMail } from '../transactional/emails/welcome';
 import { resend } from './lib/resend';
-import { ELogCategory, logger, logMiddleware } from './middleware';
+import { ELogCategory, log, logMiddleware } from './middleware';
 import { AppConfig, determineEnvironment } from './config';
 import { UserService } from './services';
 import {
@@ -29,7 +29,7 @@ const MISSING_ENVIRONMENT_VARIABLES = AppConfig.environmentVariables.filter((var
   }
 });
 if (MISSING_ENVIRONMENT_VARIABLES.length >= 1) {
-  console.log(
+  log(
     'ERROR',
     ELogCategory.SETUP,
     JSON.stringify({
@@ -77,7 +77,7 @@ app.post('/send', async (req: Request, res: Response) => {
     }
     const parsedBody = ZCombinedPayload.safeParse(reqBody);
     if (!parsedBody.success) {
-      logger.error(parsedBody.error.message, { category: ELogCategory.MAIL });
+      log('ERROR', ELogCategory.MAIL, parsedBody.error.message);
       throw new Error('Body doesn\'t match schema');
     }
     const selectedTemplateType: EMailTemplates = parsedBody.data.mail;
@@ -98,22 +98,17 @@ app.post('/send', async (req: Request, res: Response) => {
     return res.status(200).json({ data: data.id });
   } catch (error) {
     const msg = (error instanceof Error ? error.message : error) as string;
-    const err = error as Error;
-    logger.error(msg, {
-      category: ELogCategory.MAIL,
-      name: err.name,
-      message: msg,
-      stack: err.stack,
-    });
+    log('ERROR', ELogCategory.MAIL, msg);
     return res.status(500).json({ error: msg });
   }
 });
 
 export const listen = app.listen(AppConfig.port, () => {
-  logger.info('Mail-Service is listening on http://localhost:{port}', {
-    category: ELogCategory.SETUP,
-    port: AppConfig.port,
-  });
+  log(
+    'INFO',
+    ELogCategory.SETUP,
+    `Mail-Service is listening on http://localhost:${AppConfig.port}`
+  );
 });
 
 /**
